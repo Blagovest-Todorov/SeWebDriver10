@@ -3,7 +3,7 @@ using OpenQA.Selenium.Chrome;
 
 namespace SeWebDriver10
 {
-    internal class WikipediaTests
+    public class WikipediaTests
     {
         static void Main(string[] args)
         {
@@ -12,8 +12,11 @@ namespace SeWebDriver10
 
             // Navigate to  Wikipedia 
             driver.Url = "https://www.wikipedia.org/";
-
+            //driver.Manage().Window.Maximize();  // Resize current Window to the set dimension
             Console.WriteLine("Current Title: " + driver.Title);
+
+            // to delay exwcution for 5 secs
+            Thread.Sleep(5000);
 
             // Locate Search Field by Id
             var searchInputField = driver.FindElement(By.Id("searchInput"));
