@@ -19,7 +19,7 @@ namespace WebDriverDemoTests
         }
 
         [OneTimeTearDown]
-        public void OneTimeTeardown() 
+        public void OneTimeTeardown()
         {
             driver.Quit();
         }
@@ -44,6 +44,52 @@ namespace WebDriverDemoTests
 
             // Assert
             Assert.AreEqual(expectedBrowserForUsText, actualBrowserForUsElement.Text);
+        }
+
+        [Test]
+        public void Login_InvalidUsernameAndPassword_ShouldFail()
+        {
+            // Arrange
+            var enterButton = driver.FindElement(
+                By.CssSelector("#page-header > div.page-header-buttons.buttons-wrapper > ul > li.page-header-buttons-list-element.btn-item.login-btn > span > a"));
+
+            enterButton.Click();
+            var userField = driver.FindElement(By.XPath("//*[@id=\"username\"]"));
+            userField.SendKeys("user1");
+            var passField = driver.FindElement(By.XPath("//*[@id=\"password-input\"]"));
+            passField.SendKeys("user1Pass");
+
+            //IWebElement userAndPassSumitButton = driver.FindElement(By.XPath("/html/body/main/section/section/form/article[2]/input"));
+
+            var userAndPassSumitButton = driver.FindElement(By.CssSelector(
+                "body > main > section > section > form > article.login-page-form-content-login-btn > input"));
+            userAndPassSumitButton.Click();
+            //userField.Clear();
+            //passField.Clear();
+
+            var expectedMessage = "Невалидно потребителско име или парола";           
+
+            // Act
+            string actualTextMessage = driver.FindElement(By.CssSelector(
+                "body > main > section > section > form > article.validation-summary-errors > ul > li")).Text;           
+
+            // Assert
+            Assert.AreEqual(expectedMessage, actualTextMessage);            
+        }
+
+        [Test]
+        public void Check_SearchButtonOnMainPageIsWorking_IsSucessful() 
+        {
+            driver.FindElement(By.CssSelector("#search-icon-container > a > img")).Click();
+            Thread.Sleep(2000);
+            var searchInputBox = driver.FindElement(By.CssSelector("#search-input"));
+            searchInputBox.Click();
+            searchInputBox.SendKeys("QA");
+            searchInputBox.SendKeys(Keys.Enter);
+
+            var expectedTextResult = "Резултати от търсене на “QA”";
+            var actualText = driver.FindElement(By.CssSelector("body > div.content > div > div > h2")).Text;
+            Assert.AreEqual(expectedTextResult, actualText);
         }
     }
 }
